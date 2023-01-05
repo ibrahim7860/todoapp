@@ -24,7 +24,21 @@ function SignUp(props) {
             await createUserWithEmailAndPassword(auth, registerEmail, registerPassword);
             navigate('/homepage')
         } catch (error) {
-            alert(error.message)
+            if (error.code === 'auth/email-already-in-use') {
+                alert('An account exists with this email address')
+            }
+            else if (error.code === 'auth/invalid-email') {
+                alert('You have entered an invalid email')
+            }
+            else if (error.code === 'auth/operation-not-allowed') {
+                alert('Email/password accounts are not enabled')
+            }
+            else if (error.code === 'auth/weak-password') {
+                alert("The password you have entered is not strong enough")
+            }
+            else {
+                alert(error.message)
+            }
         }
     }
 
@@ -43,7 +57,7 @@ function SignUp(props) {
                         </Form.Group>
                         <Form.Group>
                             <Form.Label style={{fontSize: "27px", paddingTop: "25px"}}>Password</Form.Label>
-                            <Form.Control type="text" style={{width: "75%", height: "40px"}} onChange={(event) => {
+                            <Form.Control type="password" style={{width: "75%", height: "40px"}} onChange={(event) => {
                                 setRegisterPassword(event.target.value)
                             }}/>
                         </Form.Group>
@@ -52,17 +66,26 @@ function SignUp(props) {
                     <Row>
                         <Col>
                             <button  style={{backgroundColor: 'transparent', border: 'none'}}>
-                                <img src={google} alt="google logo" width="50px" height="50px" onClick={signInWithGoogle} />
+                                <img src={google} alt="google logo" width="50px" height="50px" onClick={() => {
+                                    signInWithGoogle()
+                                    navigate('/homepage')
+                                }} />
                             </button>
                         </Col>
                         <Col>
                             <button  style={{backgroundColor: 'transparent', border: 'none'}}>
-                                <img src={facebook} alt="facebook logo" width="50px" height="55px" onClick={signInWithFacebook} />
+                                <img src={facebook} alt="facebook logo" width="50px" height="55px" onClick={() => {
+                                    signInWithFacebook()
+                                    navigate('/homepage')
+                                }} />
                             </button>
                         </Col>
                         <Col>
                             <button  style={{backgroundColor: 'transparent', border: 'none'}}>
-                                <img src={microsoft} alt="microsoft logo" width="55px" height="55px" onClick={signInWithMicrosoft}/>
+                                <img src={microsoft} alt="microsoft logo" width="55px" height="55px" onClick={() => {
+                                    signInWithMicrosoft()
+                                    navigate('/homepage')
+                                }}/>
                             </button>
                         </Col>
                     </Row>
