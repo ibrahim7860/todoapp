@@ -8,7 +8,7 @@ import microsoft from './images/microsoft.png'
 import {auth, signInWithFacebook, signInWithGoogle, signInWithMicrosoft} from "../firebase-config";
 import {Link, useNavigate} from "react-router-dom";
 import {useEffect} from "react";
-import {createUserWithEmailAndPassword} from 'firebase/auth'
+import {createUserWithEmailAndPassword, onAuthStateChanged} from 'firebase/auth'
 
 
 function SignUp(props) {
@@ -42,6 +42,36 @@ function SignUp(props) {
         }
     }
 
+    const handleGoogleSignUp = async () => {
+        try {
+            await signInWithGoogle()
+        } catch (error) {
+            alert(error.message)
+        }
+    }
+
+    const handleFacebookSignUp = async () => {
+        try {
+            await signInWithFacebook()
+        } catch (error) {
+            alert(error.message)
+        }
+    }
+
+    const handleMicrosoftSignUp = async () => {
+        try {
+            await signInWithMicrosoft()
+        } catch (error) {
+            alert(error.message)
+        }
+    }
+
+    onAuthStateChanged(auth, (user) => {
+        if (user != null) {
+            navigate('/homepage')
+        }
+    })
+
     return (
         <div>
             <h1 className="title">What To Do?</h1>
@@ -66,26 +96,17 @@ function SignUp(props) {
                     <Row>
                         <Col>
                             <button  style={{backgroundColor: 'transparent', border: 'none'}}>
-                                <img src={google} alt="google logo" width="50px" height="50px" onClick={() => {
-                                    signInWithGoogle()
-                                    navigate('/homepage')
-                                }} />
+                                <img src={google} alt="google logo" width="50px" height="50px" onClick={handleGoogleSignUp} />
                             </button>
                         </Col>
                         <Col>
                             <button  style={{backgroundColor: 'transparent', border: 'none'}}>
-                                <img src={facebook} alt="facebook logo" width="50px" height="55px" onClick={() => {
-                                    signInWithFacebook()
-                                    navigate('/homepage')
-                                }} />
+                                <img src={facebook} alt="facebook logo" width="50px" height="55px" onClick={handleFacebookSignUp} />
                             </button>
                         </Col>
                         <Col>
                             <button  style={{backgroundColor: 'transparent', border: 'none'}}>
-                                <img src={microsoft} alt="microsoft logo" width="55px" height="55px" onClick={() => {
-                                    signInWithMicrosoft()
-                                    navigate('/homepage')
-                                }}/>
+                                <img src={microsoft} alt="microsoft logo" width="55px" height="55px" onClick={handleMicrosoftSignUp}/>
                             </button>
                         </Col>
                     </Row>
