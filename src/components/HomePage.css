@@ -11,3 +11,17 @@
     border-radius: 25px;
     background-color: white;
 }
+
+.content-body {
+    position: absolute;
+    margin-top: 86px;
+    width: 100%;
+}
+
+.date-picker {
+    display: none;
+}
+
+.react-datepicker-wrapper {
+    width: 0;
+}
