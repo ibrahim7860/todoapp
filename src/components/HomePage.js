@@ -32,10 +32,8 @@ function HomePage() {
                 <Offcanvas show={show} onHide={handleClose} style={{transition: '0.5s', backgroundColor: 'black'}}>
                     <button onClick={handleClose} style={{position: 'absolute', top: 0, right: '0px', marginLeft: '50px', fontSize: '30px', backgroundColor: 'transparent', color: '#818181', border: 'none'}}>X</button>
                     <div style={{color: '#818181', fontSize: '20px', textAlign: 'center', marginTop: '5%'}}>SIGNED IN AS:</div>
-                    <Offcanvas.Header closeButton>
-                        <Offcanvas.Title style={{color: '#818181', padding: "0px 8px 8px 32px", fontSize: '25px', display: 'block'}}>{auth.currentUser.email}</Offcanvas.Title>
-                    </Offcanvas.Header>
-                    <Offcanvas.Body style={{paddingTop: '23%', paddingBottom: '50%'}}>
+                    <div style={{color: '#818181', fontSize: '25px', textAlign: 'center', fontWeight: 'bold', marginTop: '2%'}}>{auth.currentUser.email}</div>
+                    <Offcanvas.Body style={{paddingTop: '30%', paddingBottom: '50%'}}>
                         <Link style={{padding: "0px 8px 8px", fontSize: '25px', display: 'block', transition: '0.3s', color: '#818181', textDecoration: 'none', textAlign: 'center'}}>My Day</Link><br/>
                         <Link style={{padding: "25% 8px 8px", fontSize: '25px', display: 'block', transition: '0.3s', color: '#818181', textDecoration: 'none', textAlign: 'center'}}>Important</Link><br/>
                         <Link style={{padding: "25% 8px 8px", fontSize: '25px', display: 'block', transition: '0.3s', color: '#818181', textDecoration: 'none', textAlign: 'center'}}>Tasks</Link><br/>

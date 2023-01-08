@@ -1,5 +1,6 @@
 import { initializeApp } from 'firebase/app'
 import { getAuth, GoogleAuthProvider, signInWithPopup, FacebookAuthProvider, OAuthProvider } from 'firebase/auth'
+import { getDatabase, ref, update, push } from "firebase/database";
 
 export const firebaseConfig = {
     apiKey: "AIzaSyAuHi-aACIg9q_gsKqYjOYvCr6lBp5Bmh8",
@@ -8,11 +9,13 @@ export const firebaseConfig = {
     storageBucket: "todo-app-86fb4.appspot.com",
     messagingSenderId: "828888171542",
     appId: "1:828888171542:web:0b1228d079aa075ec16137",
-    measurementId: "G-43VZGW78QJ"
+    measurementId: "G-43VZGW78QJ",
+    databaseURL: "https://todo-app-86fb4-default-rtdb.firebaseio.com/"
 };
 
 const app = initializeApp(firebaseConfig);
 export const auth = getAuth(app);
+const db = getDatabase();
 
 const provider = new GoogleAuthProvider()
 export const signInWithGoogle = () => {
