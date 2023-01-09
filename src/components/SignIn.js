@@ -5,15 +5,23 @@ import {Button, Col, Container, Form, Row} from 'react-bootstrap'
 import google from './images/google.png'
 import facebook from './images/facebook.png'
 import microsoft from './images/microsoft.png'
-import {auth, signInWithFacebook, signInWithGoogle, signInWithMicrosoft} from "../firebase-config";
+import {
+    auth,
+    db,
+    signInWithFacebook,
+    signInWithGoogle,
+    signInWithMicrosoft
+} from "../firebase-config";
 import {Link, useNavigate} from "react-router-dom";
 import {useEffect} from "react";
-import {signInWithEmailAndPassword, onAuthStateChanged} from "firebase/auth";
+import {signInWithEmailAndPassword, onAuthStateChanged, signOut} from "firebase/auth";
+import {onValue, ref, set} from "firebase/database";
 
 function SignIn(props) {
     useEffect(() => { document.body.style.backgroundColor = props.backgroundColor }, [])
     const [loginEmail, setLoginEmail] = useState("")
     const [loginPassword, setLoginPassword] = useState("")
+    const [emailList, setEmailList] = useState([])
 
     const navigate = useNavigate()
 
@@ -64,12 +72,31 @@ function SignIn(props) {
             alert(error.message)
         }
     }
-
-    onAuthStateChanged(auth, (user) => {
-        if (user != null) {
-            navigate('/homepage')
-        }
-    })
+    useEffect(() => {
+        const unsubscribe = onAuthStateChanged(auth, (user) => {
+            if (user != null) {
+                const reference = ref(db, 'user/')
+                onValue(reference, (snapshot) => {
+                    const emailData = snapshot.val()
+                    const emailList = []
+                    for (let id in emailData) {
+                        emailList.push({...emailData[id]})
+                    }
+                    setEmailList(emailList)
+                     if (!emailList.some(email => email.emailAddress === user.email)) {
+                           signOut(auth).then(() => {
+                               navigate('/')
+                               alert("This email does not have an account associated with it")
+                           })
+                      }
+                      else {
+                          navigate('/homepage')
+                      }
+                })
+            }
+        })
+        return unsubscribe;
+    }, [])
 
     return (
         <div>

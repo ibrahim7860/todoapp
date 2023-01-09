@@ -5,16 +5,25 @@ import {Button, Col, Container, Form, Row} from 'react-bootstrap'
 import google from './images/google.png'
 import facebook from './images/facebook.png'
 import microsoft from './images/microsoft.png'
-import {auth, signInWithFacebook, signInWithGoogle, signInWithMicrosoft} from "../firebase-config";
+import {
+    auth,
+    db,
+    pushEmailToDatabase,
+    signInWithFacebook,
+    signInWithGoogle,
+    signInWithMicrosoft
+} from "../firebase-config";
 import {Link, useNavigate} from "react-router-dom";
 import {useEffect} from "react";
-import {createUserWithEmailAndPassword, onAuthStateChanged} from 'firebase/auth'
+import {createUserWithEmailAndPassword, onAuthStateChanged, signOut} from 'firebase/auth'
+import {ref} from "firebase/database";
 
 
 function SignUp(props) {
     useEffect(() => { document.body.style.backgroundColor = props.backgroundColor }, [])
     const [registerEmail, setRegisterEmail] = useState("")
     const [registerPassword, setRegisterPassword] = useState("")
+    const [emailList, setEmailList] = useState([])
 
     const navigate = useNavigate()
 
@@ -68,6 +77,8 @@ function SignUp(props) {
 
     onAuthStateChanged(auth, (user) => {
         if (user != null) {
+            const reference = ref(db, 'user/')
+            pushEmailToDatabase(reference, user.email)
             navigate('/homepage')
         }
     })
