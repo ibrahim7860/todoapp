@@ -15,7 +15,7 @@ import {
 } from "../firebase-config";
 import {Link, useNavigate} from "react-router-dom";
 import {useEffect} from "react";
-import {createUserWithEmailAndPassword, onAuthStateChanged, signOut} from 'firebase/auth'
+import {createUserWithEmailAndPassword, onAuthStateChanged} from 'firebase/auth'
 import {ref} from "firebase/database";
 
 
@@ -23,7 +23,6 @@ function SignUp(props) {
     useEffect(() => { document.body.style.backgroundColor = props.backgroundColor }, [])
     const [registerEmail, setRegisterEmail] = useState("")
     const [registerPassword, setRegisterPassword] = useState("")
-    const [emailList, setEmailList] = useState([])
 
     const navigate = useNavigate()
 
@@ -75,13 +74,17 @@ function SignUp(props) {
         }
     }
 
-    onAuthStateChanged(auth, (user) => {
-        if (user != null) {
-            const reference = ref(db, 'user/')
-            pushEmailToDatabase(reference, user.email)
-            navigate('/homepage')
-        }
-    })
+    useEffect(() => {
+        const unsubscribe = onAuthStateChanged(auth, (user) => {
+            if (user != null) {
+                const emailReference = ref(db, 'user/' + user.uid)
+                pushEmailToDatabase(emailReference, user.email)
+                navigate('/homepage')
+            }
+        })
+        return () => unsubscribe()
+    }, [])
+
 
     return (
         <div>

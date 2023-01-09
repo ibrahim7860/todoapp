@@ -15,7 +15,7 @@ import {
 import {Link, useNavigate} from "react-router-dom";
 import {useEffect} from "react";
 import {signInWithEmailAndPassword, onAuthStateChanged, signOut} from "firebase/auth";
-import {onValue, ref, set} from "firebase/database";
+import {onValue, ref} from "firebase/database";
 
 function SignIn(props) {
     useEffect(() => { document.body.style.backgroundColor = props.backgroundColor }, [])
@@ -77,13 +77,13 @@ function SignIn(props) {
             if (user != null) {
                 const reference = ref(db, 'user/')
                 onValue(reference, (snapshot) => {
-                    const emailData = snapshot.val()
                     const emailList = []
-                    for (let id in emailData) {
-                        emailList.push({...emailData[id]})
-                    }
+                    snapshot.forEach(function (childSnapshot) {
+                        let value = childSnapshot.val()
+                        emailList.push(value.emailAddress)
+                    })
                     setEmailList(emailList)
-                     if (!emailList.some(email => email.emailAddress === user.email)) {
+                     if (!emailList.some(email => email === user.email)) {
                            signOut(auth).then(() => {
                                navigate('/')
                                alert("This email does not have an account associated with it")
@@ -95,7 +95,7 @@ function SignIn(props) {
                 })
             }
         })
-        return unsubscribe;
+        return () => unsubscribe();
     }, [])
 
     return (

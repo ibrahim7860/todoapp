@@ -1,6 +1,6 @@
 import { initializeApp } from 'firebase/app'
 import { getAuth, GoogleAuthProvider, signInWithPopup, FacebookAuthProvider, OAuthProvider } from 'firebase/auth'
-import { getDatabase, ref, push } from "firebase/database";
+import { getDatabase, ref, set } from "firebase/database";
 
 export const firebaseConfig = {
     apiKey: "AIzaSyAuHi-aACIg9q_gsKqYjOYvCr6lBp5Bmh8",
@@ -18,7 +18,7 @@ export const auth = getAuth(app);
 export const db = getDatabase();
 export const toDoReference = ref(db, 'todos/')
 export function pushEmailToDatabase(emailRef, email) {
-    push(emailRef, {
+    set(emailRef, {
         emailAddress: email
     })
 }
