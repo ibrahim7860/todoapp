@@ -19,8 +19,7 @@ import {createUserWithEmailAndPassword, onAuthStateChanged} from 'firebase/auth'
 import {ref} from "firebase/database";
 
 
-function SignUp(props) {
-    useEffect(() => { document.body.style.backgroundColor = props.backgroundColor }, [])
+function SignUp() {
     const [registerEmail, setRegisterEmail] = useState("")
     const [registerPassword, setRegisterPassword] = useState("")
 

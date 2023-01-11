@@ -1,5 +1,5 @@
 import React, {useEffect, useState} from 'react';
-import {auth, toDoReference} from "../firebase-config";
+import {auth, db} from "../firebase-config";
 import {signOut} from 'firebase/auth'
 import {Link, useNavigate} from "react-router-dom";
 import 'bootstrap/dist/css/bootstrap.css';
@@ -12,12 +12,14 @@ import menu from './images/menu.png'
 import calendar from './images/calendar.png'
 import whiteStar from './images/whitestar.png'
 import yellowStar from './images/yellowstar.png'
+import Todo from "./Todo";
 
 function HomePage() {
 
+    const toDoReference = ref(db, 'todos/' + auth.currentUser.uid)
     const [show, setShow] = useState(false)
     const [toDoName, setToDoName] = useState("")
-    const [todoList, setToDoList] = useState([])
+    const [toDoList, setToDoList] = useState([])
     const [date, setDate] = useState(new Date())
     const [datePickerIsOpen, setDatePickerIsOpen] = useState(false)
     const [active, setActive] = useState(false)
@@ -50,24 +52,23 @@ function HomePage() {
             importance: important,
             Date: date.toDateString()
         })
+        setToDoName("")
     }
 
     useEffect(() => {
         onValue(toDoReference, (snapshot) => {
             const todos = snapshot.val()
+            const toDoList = []
             for (let toDoName in todos) {
-                todoList.push({toDoName, ...todos[toDoName]})
+                toDoList.push({toDoName, ...todos[toDoName]})
             }
-            setToDoList(todoList)
-            for (let i = 0; i < todoList.length; i++) {
-                console.log(todoList[i].toDoName)
-            }
+            setToDoList(toDoList)
         })
     }, [])
 
     return (
         <div className="content-box">
-            <Navbar bg="white" style={{borderRadius: '25px', float: 'left', textAlign: 'center', width: '100%'}}>
+            <Navbar style={{borderRadius: '25px', float: 'left', textAlign: 'center', width: '100%'}}>
                 <button style={{backgroundColor: 'transparent', border: 'none', marginLeft: '10px'}} data-bs-toggle="offcanvas" data-bs-target="#sidebar">
                     <img src={menu} alt="sidebar" width="45px" height="45px" onClick={handleShow}/>
                 </button>
@@ -92,7 +93,7 @@ function HomePage() {
                     <Card.Body>
                         <div style={{display: 'flex', flexDirection: 'row', alignItems: 'center'}}>
                             <input type="text" placeholder="Add new task" value={toDoName} onChange={handleToDo} required style={{borderColor: 'transparent', width: '100%', outline: 'none'}} />
-                            {active ?  <img src={yellowStar} alt="yellow-star" width="35px" height="35px" onClick={onSetActive}/> :  <img src={whiteStar} alt="white-star" width="35px" height="35px" onClick={onSetActive}/>}
+                            {active ?  <button onClick={onSetActive} style={{backgroundColor: 'transparent', border: 'none'}}><img src={yellowStar} alt="yellow-star" width="35px" height="35px"/></button> :  <button onClick={onSetActive} style={{backgroundColor: 'transparent', border: 'none'}}><img src={whiteStar} alt="white-star" width="35px" height="35px"/></button>}
                             <input type="image" alt="calendar" onClick={openDatePicker} src={calendar} style={{backgroundColor: 'transparent', border: 'none', marginLeft: '10px', width: "55px", height: "45px"}}/>
                             <DatePicker open={datePickerIsOpen} className="date-picker" onClickOutside={openDatePicker} onChange={date => setDate(date)} />
                             <div style={{marginLeft: '10px'}}>
@@ -102,6 +103,7 @@ function HomePage() {
                     </Card.Body>
                 </Card>
                 <hr style={{width: '50%', margin: 'auto', marginTop: '30px', marginBottom: '30px'}}/>
+                <div>{toDoList ? toDoList.map((todo) => <Todo todo={todo} />) : ""}</div>
             </div>
         </div>
     )

@@ -1,6 +1,6 @@
 import React, {useState} from 'react';
 import {Button, Container, Form} from "react-bootstrap";
-import {useNavigate} from "react-router-dom";
+import {Link, useNavigate} from "react-router-dom";
 import firebase from "firebase/compat/app";
 import 'firebase/compat/auth'
 import {firebaseConfig} from "../firebase-config";
@@ -36,9 +36,12 @@ function ForgotPassword() {
                                 setForgotPasswordEmail(event.target.value)
                             }}/>
                         </Form.Group>
-                        <Button onClick={handlePasswordReset} variant="primary" style={{marginTop: "10%", marginBottom: "44px", width: "75%"}}>RESET PASSWORD</Button>
+                        <Button onClick={handlePasswordReset} variant="primary" style={{marginTop: "10%", marginBottom: "30px", width: "75%"}}>RESET PASSWORD</Button>
                     </Form>
                 </Container>
+                <div style={{display: "flex", marginTop: "15px", justifyContent: 'center', fontSize: "20px"}}>
+                    <Link to="/" replace>BACK TO SIGN IN</Link>
+                </div>
             </div>
         </div>
     );

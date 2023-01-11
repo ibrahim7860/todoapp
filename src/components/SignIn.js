@@ -17,8 +17,7 @@ import {useEffect} from "react";
 import {signInWithEmailAndPassword, onAuthStateChanged, signOut} from "firebase/auth";
 import {onValue, ref} from "firebase/database";
 
-function SignIn(props) {
-    useEffect(() => { document.body.style.backgroundColor = props.backgroundColor }, [])
+function SignIn() {
     const [loginEmail, setLoginEmail] = useState("")
     const [loginPassword, setLoginPassword] = useState("")
     const [emailList, setEmailList] = useState([])
