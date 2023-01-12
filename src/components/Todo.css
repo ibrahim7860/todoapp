@@ -1,0 +1,16 @@
+.complete {
+    color: white;
+    margin-left: 15px;
+    width: 100%;
+    background: transparent;
+    border: none;
+    text-decoration: line-through;
+}
+
+.list-item {
+    color: white;
+    margin-left: 15px;
+    width: 100%;
+    background: transparent;
+    border: none;
+}

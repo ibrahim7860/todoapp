@@ -17,6 +17,7 @@ import Todo from "./Todo";
 function HomePage() {
 
     const toDoReference = ref(db, 'todos/' + auth.currentUser.uid)
+    let canCreateToDo = true;
     const [show, setShow] = useState(false)
     const [toDoName, setToDoName] = useState("")
     const [toDoList, setToDoList] = useState([])
@@ -46,12 +47,25 @@ function HomePage() {
     }
     const createToDo = (e) => {
         e.preventDefault()
-        push(toDoReference, {
-            toDoName,
-            completed: false,
-            importance: important,
-            Date: date.toDateString()
+        onValue(toDoReference, (snapshot) => {
+            const todos = snapshot.val()
+            for (let id in todos) {
+                if ((toDoName == todos[id].toDoName) && (important == todos[id].importance) && (date.toDateString() == todos[id].Date) ) {
+                    canCreateToDo = false;
+                }
+            }
         })
+        if (canCreateToDo == false) {
+            alert("This is a duplicate of another todo")
+        }
+        else {
+            push(toDoReference, {
+                toDoName,
+                completed: false,
+                importance: important,
+                Date: date.toDateString()
+            })
+        }
         setToDoName("")
     }
 
@@ -102,7 +116,7 @@ function HomePage() {
                         </div>
                     </Card.Body>
                 </Card>
-                <hr style={{width: '50%', margin: 'auto', marginTop: '30px', marginBottom: '30px'}}/>
+                <hr style={{width: '50%', margin: 'auto', marginTop: '30px', marginBottom: '30px', height: '10px', backgroundColor: '#b7d0e2'}}/>
                 <div>{toDoList ? toDoList.map((todo) => <Todo todo={todo} />) : ""}</div>
             </div>
         </div>
