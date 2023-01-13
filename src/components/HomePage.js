@@ -17,9 +17,13 @@ import Todo from "./Todo";
 function HomePage() {
 
     const toDoReference = ref(db, 'todos/' + auth.currentUser.uid)
-    let canCreateToDo = true, myDay = false, isImportant = false, isCompleted = false, allTasks = false, nullQuote = false
+    let canCreateToDo = true, nullQuote = false
     const today = format(new Date())
     const [show, setShow] = useState(false)
+    let [isImportant, setIsImportant] = useState(false)
+    let [isCompleted, setIsCompleted] = useState(false)
+    let [myDay, setMyDay] = useState(false)
+    let [allTasks, setAllTasks] = useState(false)
     const [toDoName, setToDoName] = useState("")
     const [toDoList, setToDoList] = useState([])
     const [date, setDate] = useState(new Date())
@@ -134,10 +138,30 @@ function HomePage() {
                     <div style={{color: '#818181', fontSize: '20px', textAlign: 'center', marginTop: '5%'}}>SIGNED IN AS:</div>
                     <div style={{color: '#818181', fontSize: '25px', textAlign: 'center', fontWeight: 'bold', marginTop: '2%'}}>{auth.currentUser.email}</div>
                     <Offcanvas.Body style={{paddingTop: '25%', paddingBottom: '50%'}}>
-                        <button style={{fontSize: '25px', display: 'block', transition: '0.3s', color: '#818181', textDecoration: 'none', margin: 'auto', backgroundColor: 'transparent', border: 'none', marginBottom: '17%'}} onClick={() => myDay = true}>My Day</button><br/>
-                        <button style={{fontSize: '25px', display: 'block', transition: '0.3s', color: '#818181', textDecoration: 'none', margin: 'auto', backgroundColor: 'transparent', border: 'none', marginBottom: '17%'}} onClick={() => isImportant = true}>Important</button><br/>
-                        <button style={{fontSize: '25px', display: 'block', transition: '0.3s', color: '#818181', textDecoration: 'none', margin: 'auto', backgroundColor: 'transparent', border: 'none', marginBottom: '17%'}} onClick={() => isCompleted = true}>Completed</button><br/>
-                        <button style={{fontSize: '25px', display: 'block', transition: '0.3s', color: '#818181', textDecoration: 'none', margin: 'auto', backgroundColor: 'transparent', border: 'none', marginBottom: '17%'}} onClick={() => allTasks = true}>All Tasks</button><br/>
+                        <button style={{fontSize: '25px', display: 'block', transition: '0.3s', color: '#818181', textDecoration: 'none', margin: 'auto', backgroundColor: 'transparent', border: 'none', marginBottom: '17%'}} onClick={() => {
+                            setMyDay(true)
+                            setImportant(false)
+                            setIsCompleted(false)
+                            setAllTasks(false)
+                        }}>My Day</button><br/>
+                        <button style={{fontSize: '25px', display: 'block', transition: '0.3s', color: '#818181', textDecoration: 'none', margin: 'auto', backgroundColor: 'transparent', border: 'none', marginBottom: '17%'}} onClick={() => {
+                            setIsImportant(true)
+                            setIsCompleted(false)
+                            setAllTasks(false)
+                            setMyDay(false)
+                        }}>Important</button><br/>
+                        <button style={{fontSize: '25px', display: 'block', transition: '0.3s', color: '#818181', textDecoration: 'none', margin: 'auto', backgroundColor: 'transparent', border: 'none', marginBottom: '17%'}} onClick={() => {
+                            setIsCompleted(true)
+                            setAllTasks(false)
+                            setMyDay(false)
+                            setIsImportant(false)
+                        }}>Completed</button><br/>
+                        <button style={{fontSize: '25px', display: 'block', transition: '0.3s', color: '#818181', textDecoration: 'none', margin: 'auto', backgroundColor: 'transparent', border: 'none', marginBottom: '17%'}} onClick={() => {
+                            setAllTasks(true)
+                            setMyDay(false)
+                            setIsImportant(false)
+                            setIsCompleted(false)
+                        }}>All Tasks</button><br/>
                     </Offcanvas.Body>
                 </Offcanvas>
                 <Navbar.Brand style={{fontSize: '40px', fontWeight: 'bold', marginLeft: '38%'}}>MY TASKS</Navbar.Brand>
@@ -171,7 +195,21 @@ function HomePage() {
                     </Card.Body>
                 </Card>
                 <hr style={{width: '50%', margin: 'auto', marginTop: '30px', marginBottom: '30px', height: '10px', backgroundColor: '#b7d0e2'}}/>
-                <div>{toDoList ? toDoList.map((todo) => <Todo todo={todo} />) : ""}</div>
+                <div>
+                    {myDay ? toDoList.filter((todo) => {
+                        if (todo.Date == today) {
+                            return todo
+                        }
+                    }).map((todo) => <Todo todo={todo} />) : isImportant ? toDoList.filter((todo) => {
+                        if (todo.importance == true) {
+                            return todo
+                        }
+                    }).map((todo) => <Todo todo={todo} />) : isCompleted ? toDoList.filter((todo) => {
+                        if (todo.completed == true) {
+                            return todo
+                        }
+                    }).map((todo) => <Todo todo={todo} />) : allTasks ? toDoList.map((todo) => <Todo todo={todo} />) : toDoList ? toDoList.map((todo) => <Todo todo={todo} />) : ""}
+                </div>
             </div>
         </div>
     )
