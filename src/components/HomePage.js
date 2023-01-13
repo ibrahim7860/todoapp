@@ -1,7 +1,7 @@
 import React, {useEffect, useState} from 'react';
 import {auth, db} from "../firebase-config";
 import {signOut} from 'firebase/auth'
-import {Link, useNavigate} from "react-router-dom";
+import {useNavigate} from "react-router-dom";
 import 'bootstrap/dist/css/bootstrap.css';
 import {Card, Nav, Navbar, Offcanvas} from "react-bootstrap";
 import DatePicker from "react-datepicker";
@@ -17,7 +17,8 @@ import Todo from "./Todo";
 function HomePage() {
 
     const toDoReference = ref(db, 'todos/' + auth.currentUser.uid)
-    let canCreateToDo = true;
+    let canCreateToDo = true, myDay = false, isImportant = false, isCompleted = false, allTasks = false, nullQuote = false
+    const today = format(new Date())
     const [show, setShow] = useState(false)
     const [toDoName, setToDoName] = useState("")
     const [toDoList, setToDoList] = useState([])
@@ -25,7 +26,10 @@ function HomePage() {
     const [datePickerIsOpen, setDatePickerIsOpen] = useState(false)
     const [active, setActive] = useState(false)
     const [important, setImportant] = useState(false)
+    const [quotes, setQuotes] = useState([])
     const navigate = useNavigate()
+    const [start, setStart] = useState(0)
+    const [end, setEnd] = useState(0)
 
     const signUserOut = () => {
         signOut(auth).then(() => {
@@ -45,28 +49,51 @@ function HomePage() {
     const handleToDo = (e) => {
         setToDoName(e.target.value)
     }
+    function format(inputDate) {
+        let date, month, year;
+
+        date = inputDate.getDate();
+        month = inputDate.getMonth() + 1;
+        year = inputDate.getFullYear();
+
+        date = date
+            .toString()
+            .padStart(2, '0');
+
+        month = month
+            .toString()
+            .padStart(2, '0');
+
+        return `${month}/${date}/${year}`;
+    }
     const createToDo = (e) => {
         e.preventDefault()
-        onValue(toDoReference, (snapshot) => {
-            const todos = snapshot.val()
-            for (let id in todos) {
-                if ((toDoName == todos[id].toDoName) && (important == todos[id].importance) && (date.toDateString() == todos[id].Date) ) {
-                    canCreateToDo = false;
-                }
-            }
-        })
-        if (canCreateToDo == false) {
-            alert("This is a duplicate of another todo")
+        if (toDoName == "") {
+            alert("Cannot have empty to do")
         }
         else {
-            push(toDoReference, {
-                toDoName,
-                completed: false,
-                importance: important,
-                Date: date.toDateString()
+            const formattedDate = format(date)
+            onValue(toDoReference, (snapshot) => {
+                const todos = snapshot.val()
+                for (let id in todos) {
+                    if ((toDoName == todos[id].toDoName) && (important == todos[id].importance) && (formattedDate == todos[id].Date) ) {
+                        canCreateToDo = false;
+                    }
+                }
             })
+            if (canCreateToDo == false) {
+                alert("This is a duplicate of another todo")
+            }
+            else {
+                push(toDoReference, {
+                    toDoName,
+                    completed: false,
+                    importance: important,
+                    Date: formattedDate
+                })
+            }
+            setToDoName("")
         }
-        setToDoName("")
     }
 
     useEffect(() => {
@@ -80,6 +107,22 @@ function HomePage() {
         })
     }, [])
 
+    useEffect(() => {
+        const fetchQuote = async () => {
+            await fetch("https://type.fit/api/quotes")
+                .then((response) => response.json())
+                .then((data) => setQuotes(data));
+        };
+        fetchQuote();
+    }, []);
+
+    useEffect(() => {
+        const startingNumber = Math.floor(Math.random() * 1000)
+        setStart(startingNumber)
+        const endingNumber = startingNumber + 1
+        setEnd(endingNumber)
+    }, [])
+
     return (
         <div className="content-box">
             <Navbar style={{borderRadius: '25px', float: 'left', textAlign: 'center', width: '100%'}}>
@@ -91,10 +134,10 @@ function HomePage() {
                     <div style={{color: '#818181', fontSize: '20px', textAlign: 'center', marginTop: '5%'}}>SIGNED IN AS:</div>
                     <div style={{color: '#818181', fontSize: '25px', textAlign: 'center', fontWeight: 'bold', marginTop: '2%'}}>{auth.currentUser.email}</div>
                     <Offcanvas.Body style={{paddingTop: '25%', paddingBottom: '50%'}}>
-                        <Link style={{padding: "0px 8px 8px", fontSize: '25px', display: 'block', transition: '0.3s', color: '#818181', textDecoration: 'none', textAlign: 'center'}}>My Day</Link><br/>
-                        <Link style={{padding: "15% 8px 8px", fontSize: '25px', display: 'block', transition: '0.3s', color: '#818181', textDecoration: 'none', textAlign: 'center'}}>Important</Link><br/>
-                        <Link style={{padding: "15% 8px 8px", fontSize: '25px', display: 'block', transition: '0.3s', color: '#818181', textDecoration: 'none', textAlign: 'center'}}>Completed</Link><br/>
-                        <Link style={{padding: "15% 8px 8px", fontSize: '25px', display: 'block', transition: '0.3s', color: '#818181', textDecoration: 'none', textAlign: 'center'}}>All Tasks</Link><br/>
+                        <button style={{fontSize: '25px', display: 'block', transition: '0.3s', color: '#818181', textDecoration: 'none', margin: 'auto', backgroundColor: 'transparent', border: 'none', marginBottom: '17%'}} onClick={() => myDay = true}>My Day</button><br/>
+                        <button style={{fontSize: '25px', display: 'block', transition: '0.3s', color: '#818181', textDecoration: 'none', margin: 'auto', backgroundColor: 'transparent', border: 'none', marginBottom: '17%'}} onClick={() => isImportant = true}>Important</button><br/>
+                        <button style={{fontSize: '25px', display: 'block', transition: '0.3s', color: '#818181', textDecoration: 'none', margin: 'auto', backgroundColor: 'transparent', border: 'none', marginBottom: '17%'}} onClick={() => isCompleted = true}>Completed</button><br/>
+                        <button style={{fontSize: '25px', display: 'block', transition: '0.3s', color: '#818181', textDecoration: 'none', margin: 'auto', backgroundColor: 'transparent', border: 'none', marginBottom: '17%'}} onClick={() => allTasks = true}>All Tasks</button><br/>
                     </Offcanvas.Body>
                 </Offcanvas>
                 <Navbar.Brand style={{fontSize: '40px', fontWeight: 'bold', marginLeft: '38%'}}>MY TASKS</Navbar.Brand>
@@ -103,7 +146,18 @@ function HomePage() {
                 </Nav>
             </Navbar>
             <div className="content-body">
-                <Card className="mx-auto" style={{width: '50%', marginTop: '15px'}}>
+                {quotes.slice(start, end).map((quote) => {
+                    if (quote.author == null) {
+                        nullQuote = true;
+                    }
+                    return (
+                        <div style={{color: 'lightgreen', marginTop: '5px'}}>
+                            <span style={{textAlign: 'center'}}><h4>"{quote.text}"</h4></span>
+                            <span style={{textAlign: 'center'}}><h3>{nullQuote ? "" : quote.author}</h3></span>
+                        </div>
+                    )
+                })}
+                <Card className="mx-auto" style={{width: '50%', marginTop: '35px'}}>
                     <Card.Body>
                         <div style={{display: 'flex', flexDirection: 'row', alignItems: 'center'}}>
                             <input type="text" placeholder="Add new task" value={toDoName} onChange={handleToDo} required style={{borderColor: 'transparent', width: '100%', outline: 'none'}} />

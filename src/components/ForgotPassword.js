@@ -27,7 +27,7 @@ function ForgotPassword() {
             <h1 className="title">What To Do?</h1>
             <div className="login-box">
                 <h1 className="sign-in">FORGOT PASSWORD?</h1>
-                <div style={{display: 'flex', justifyContent: 'center', fontSize: "22px", marginTop: "10%"}}>Please enter your email address and we will send you instructions to reset your password</div>
+                <div style={{display: 'flex', justifyContent: 'center', fontSize: "22px", marginTop: "5%"}}>Please enter your email address and we will send you instructions to reset your password</div>
                 <Container fluid style={{paddingLeft: "25%"}}>
                     <Form>
                         <Form.Group style={{marginTop: "5%"}}>
@@ -36,10 +36,10 @@ function ForgotPassword() {
                                 setForgotPasswordEmail(event.target.value)
                             }}/>
                         </Form.Group>
-                        <Button onClick={handlePasswordReset} variant="primary" style={{marginTop: "10%", marginBottom: "30px", width: "75%"}}>RESET PASSWORD</Button>
+                        <Button onClick={handlePasswordReset} variant="primary" style={{marginTop: "12%", marginBottom: "30px", width: "75%"}}>RESET PASSWORD</Button>
                     </Form>
                 </Container>
-                <div style={{display: "flex", marginTop: "15px", justifyContent: 'center', fontSize: "20px"}}>
+                <div style={{display: "flex", marginTop: "45px", justifyContent: 'center', fontSize: "20px"}}>
                     <Link to="/" replace>BACK TO SIGN IN</Link>
                 </div>
             </div>
