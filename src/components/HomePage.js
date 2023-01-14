@@ -5,7 +5,7 @@ import {useNavigate} from "react-router-dom";
 import 'bootstrap/dist/css/bootstrap.css';
 import {Card, Nav, Navbar, Offcanvas} from "react-bootstrap";
 import DatePicker from "react-datepicker";
-import {push, ref, onValue} from 'firebase/database'
+import {onValue, push, ref} from 'firebase/database'
 import 'react-datepicker/dist/react-datepicker.css'
 import './HomePage.css'
 import menu from './images/menu.png'
@@ -78,8 +78,7 @@ function HomePage() {
         hours = hours % 12;
         hours = hours ? hours : 12;
         minutes = minutes < 10 ? '0' + minutes : minutes;
-        let strTime = hours + ':' + minutes + ' ' + ampm;
-        return strTime
+        return hours + ':' + minutes + ' ' + ampm
     }
     const createToDo = (e) => {
         e.preventDefault()
@@ -120,6 +119,9 @@ function HomePage() {
             for (let toDoName in todos) {
                 toDoList.push({toDoName, ...todos[toDoName]})
             }
+            toDoList.sort(function(a,b) {
+                return new Date(a.Date) - new Date(b.Date)
+            })
             setToDoList(toDoList)
         })
     }, [])
@@ -150,7 +152,8 @@ function HomePage() {
                     <button onClick={handleClose} style={{position: 'absolute', top: 0, right: '0px', marginLeft: '50px', fontSize: '30px', backgroundColor: 'transparent', color: '#818181', border: 'none'}}>X</button>
                     <div style={{color: '#818181', fontSize: '20px', textAlign: 'center', marginTop: '5%'}}>SIGNED IN AS:</div>
                     <div style={{color: '#818181', fontSize: '25px', textAlign: 'center', fontWeight: 'bold', marginTop: '2%'}}>{auth.currentUser.email}</div>
-                    <Offcanvas.Body style={{paddingTop: '25%', paddingBottom: '50%'}}>
+                    <div style={{color: '#818181', fontSize: '25px', textAlign: 'center', marginTop: '2%'}}>{today}</div>
+                    <Offcanvas.Body style={{paddingTop: '20%', paddingBottom: '50%'}}>
                         <button style={{fontSize: '25px', display: 'block', transition: '0.3s', color: '#818181', textDecoration: 'none', margin: 'auto', backgroundColor: 'transparent', border: 'none', marginBottom: '17%'}} onClick={() => {
                             setMyDay(true)
                             setImportant(false)
@@ -177,7 +180,7 @@ function HomePage() {
                         }}>All Tasks</button><br/>
                     </Offcanvas.Body>
                 </Offcanvas>
-                <Navbar.Brand style={{fontSize: '40px', fontWeight: 'bold', marginLeft: '38%'}}>MY TASKS</Navbar.Brand>
+                <Navbar.Brand className="my-tasks">MY TASKS</Navbar.Brand>
                 <Nav className="ms-auto">
                     <Nav.Link onClick={signUserOut} style={{marginRight: '10px', fontSize: '20px', borderStyle: 'solid', borderWidth: '4px', backgroundColor: 'red', borderRadius: '15px', fontWeight: 'bold'}}>SIGN OUT</Nav.Link>
                 </Nav>
@@ -188,18 +191,18 @@ function HomePage() {
                         nullQuote = true;
                     }
                     return (
-                        <div style={{color: 'lightgreen', marginTop: '5px'}}>
-                            <span style={{textAlign: 'center'}}><h4>"{quote.text}"</h4></span>
-                            <span style={{textAlign: 'center'}}><h3>{nullQuote ? "" : quote.author}</h3></span>
+                        <div className="quote-container">
+                            <span className="quote-text"><h2>"{quote.text}"</h2></span>
+                            <span className="quote-author"><h2>{nullQuote ? "" : quote.author}</h2></span>
                         </div>
                     )
                 })}
-                <Card className="mx-auto" style={{width: '50%', marginTop: '35px'}}>
-                    <Card.Body>
+                <Card className="mx-auto" style={{width: '50%', marginTop: '35px', borderColor: 'red', borderWidth: '5px'}}>
+                    <Card.Body style={{backgroundColor: 'black'}}>
                         <div style={{display: 'flex', flexDirection: 'row', alignItems: 'center'}}>
-                            <input type="text" placeholder="Add new task" value={toDoName} onChange={handleToDo} required style={{borderColor: 'transparent', width: '100%', outline: 'none'}} />
+                            <input type="text" placeholder="Add new task" value={toDoName} onChange={handleToDo} required style={{borderColor: 'transparent', width: '100%', outline: 'none', backgroundColor: 'transparent', color: 'white'}} />
                             {active ?  <button onClick={onSetActive} style={{backgroundColor: 'transparent', border: 'none'}}><img src={yellowStar} alt="yellow-star" width="35px" height="35px"/></button> :  <button onClick={onSetActive} style={{backgroundColor: 'transparent', border: 'none'}}><img src={whiteStar} alt="white-star" width="35px" height="35px"/></button>}
-                            <input type="image" alt="calendar" onClick={openDatePicker} src={calendar} style={{backgroundColor: 'transparent', border: 'none', marginLeft: '10px', width: "55px", height: "45px"}}/>
+                            <input type="image" alt="calendar" onClick={openDatePicker} src={calendar} style={{backgroundColor: 'transparent', border: 'none', marginLeft: '4px', width: "55px", height: "45px"}}/>
                             <DatePicker open={datePickerIsOpen} showTimeSelect selected={date} className="date-picker" onClickOutside={openDatePicker} onChange={date => setDate(date)} />
                             <div style={{marginLeft: '10px'}}>
                                 <button type="button" className="btn btn-primary" onClick={createToDo}>Add</button>

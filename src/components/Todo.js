@@ -3,9 +3,8 @@ import {Card} from "react-bootstrap";
 import checkmark from './images/checkmark.png'
 import edit from './images/edit.png'
 import deleteImage from './images/delete.png'
-import {onValue, ref} from "firebase/database";
+import {onValue, ref, remove, update} from "firebase/database";
 import {auth, db} from "../firebase-config";
-import {update, remove} from 'firebase/database'
 import './Todo.css'
 import calendar from './images/calendar.png'
 import whiteStar from './images/whitestar.png'
@@ -64,8 +63,7 @@ function Todo(props) {
         hours = hours % 12;
         hours = hours ? hours : 12;
         minutes = minutes < 10 ? '0' + minutes : minutes;
-        let strTime = hours + ':' + minutes + ' ' + ampm;
-        return strTime
+        return hours + ':' + minutes + ' ' + ampm
     }
 
     const openDatePickerSubmit = () => {

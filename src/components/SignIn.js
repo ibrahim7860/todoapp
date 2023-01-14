@@ -106,22 +106,22 @@ function SignIn() {
                     <Form>
                         <Form.Group>
                             <Form.Label style={{fontSize: "27px"}}>Email</Form.Label>
-                            <Form.Control type="email" style={{width: "75%", height: "40px"}} onChange={(event) => {
+                            <Form.Control type="email" style={{width: "70%", height: "40px"}} onChange={(event) => {
                                 setLoginEmail(event.target.value)
                             }}/>
                         </Form.Group>
                         <Form.Group>
                             <Form.Label style={{fontSize: "27px", paddingTop: "25px"}}>Password</Form.Label>
-                            <Form.Control type="password" style={{width: "75%", height: "40px"}} onChange={(event) => {
+                            <Form.Control type="password" style={{width: "70%", height: "40px"}} onChange={(event) => {
                                 setLoginPassword(event.target.value)
                             }}/>
                         </Form.Group>
-                        <Button onClick={login} variant="primary" style={{marginTop: "40px", width: "75%"}}>SIGN IN</Button>
+                        <Button onClick={login} variant="primary" style={{marginTop: "40px", width: "70%"}}>SIGN IN</Button>
                     </Form>
-                    <Row style={{marginLeft: '53%', marginTop: "10px", marginBottom: "10px", fontSize: "12pt"}}>
+                    <Row style={{marginLeft: '51%', marginTop: "10px", marginBottom: "10px", fontSize: "12pt"}}>
                         <Link to="/forgotpassword" replace>Forgot Password?</Link>
                     </Row>
-                    <Row>
+                    <Row style={{marginRight: '6.5%'}}>
                         <Col>
                             <button  style={{backgroundColor: 'transparent', border: 'none'}}>
                                 <img src={google} alt="google logo" width="50px" height="50px" onClick={handleGoogleSignIn} />

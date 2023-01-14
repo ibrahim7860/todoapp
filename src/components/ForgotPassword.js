@@ -32,11 +32,11 @@ function ForgotPassword() {
                     <Form>
                         <Form.Group style={{marginTop: "5%"}}>
                             <Form.Label style={{fontSize: "27px"}}>Email</Form.Label>
-                            <Form.Control type="email" style={{width: "75%", height: "40px"}} onChange={(event) => {
+                            <Form.Control type="email" style={{width: "67%", height: "40px"}} onChange={(event) => {
                                 setForgotPasswordEmail(event.target.value)
                             }}/>
                         </Form.Group>
-                        <Button onClick={handlePasswordReset} variant="primary" style={{marginTop: "12%", marginBottom: "30px", width: "75%"}}>RESET PASSWORD</Button>
+                        <Button onClick={handlePasswordReset} variant="primary" style={{marginTop: "10%", marginBottom: "15px", width: "67%"}}>RESET PASSWORD</Button>
                     </Form>
                 </Container>
                 <div style={{display: "flex", marginTop: "45px", justifyContent: 'center', fontSize: "20px"}}>

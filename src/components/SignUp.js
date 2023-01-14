@@ -94,19 +94,19 @@ function SignUp() {
                     <Form>
                         <Form.Group>
                             <Form.Label style={{fontSize: "27px"}}>Email</Form.Label>
-                            <Form.Control type="email" style={{width: "75%", height: "40px"}} onChange={(event) => {
+                            <Form.Control type="email" style={{width: "70%", height: "40px"}} onChange={(event) => {
                                 setRegisterEmail(event.target.value)
                             }}/>
                         </Form.Group>
                         <Form.Group>
                             <Form.Label style={{fontSize: "27px", paddingTop: "25px"}}>Password</Form.Label>
-                            <Form.Control type="password" style={{width: "75%", height: "40px"}} onChange={(event) => {
+                            <Form.Control type="password" style={{width: "70%", height: "40px"}} onChange={(event) => {
                                 setRegisterPassword(event.target.value)
                             }}/>
                         </Form.Group>
-                        <Button onClick={register} variant="primary" style={{marginTop: "40px", marginBottom: "44px", width: "75%"}}>SIGN UP</Button>
+                        <Button onClick={register} variant="primary" style={{marginTop: "40px", marginBottom: "44px", width: "70%"}}>SIGN UP</Button>
                     </Form>
-                    <Row>
+                    <Row style={{marginRight: '6.5%'}}>
                         <Col>
                             <button  style={{backgroundColor: 'transparent', border: 'none'}}>
                                 <img src={google} alt="google logo" width="50px" height="50px" onClick={handleGoogleSignUp} />
