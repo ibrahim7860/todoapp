@@ -70,6 +70,17 @@ function HomePage() {
 
         return `${month}/${date}/${year}`;
     }
+    function getTime(inputDate) {
+        let hours = inputDate.getHours();
+        let minutes = inputDate.getMinutes();
+        let ampm = hours >= 12 ? 'pm' : 'am';
+
+        hours = hours % 12;
+        hours = hours ? hours : 12;
+        minutes = minutes < 10 ? '0' + minutes : minutes;
+        let strTime = hours + ':' + minutes + ' ' + ampm;
+        return strTime
+    }
     const createToDo = (e) => {
         e.preventDefault()
         if (toDoName == "") {
@@ -77,10 +88,11 @@ function HomePage() {
         }
         else {
             const formattedDate = format(date)
+            const formattedTime = getTime(date)
             onValue(toDoReference, (snapshot) => {
                 const todos = snapshot.val()
                 for (let id in todos) {
-                    if ((toDoName == todos[id].toDoName) && (important == todos[id].importance) && (formattedDate == todos[id].Date) ) {
+                    if ((toDoName == todos[id].toDoName) && (important == todos[id].importance) && (formattedDate == todos[id].Date) && (formattedTime == todos[id].Time) ) {
                         canCreateToDo = false;
                     }
                 }
@@ -93,7 +105,8 @@ function HomePage() {
                     toDoName,
                     completed: false,
                     importance: important,
-                    Date: formattedDate
+                    Date: formattedDate,
+                    Time: formattedTime
                 })
             }
             setToDoName("")
@@ -187,7 +200,7 @@ function HomePage() {
                             <input type="text" placeholder="Add new task" value={toDoName} onChange={handleToDo} required style={{borderColor: 'transparent', width: '100%', outline: 'none'}} />
                             {active ?  <button onClick={onSetActive} style={{backgroundColor: 'transparent', border: 'none'}}><img src={yellowStar} alt="yellow-star" width="35px" height="35px"/></button> :  <button onClick={onSetActive} style={{backgroundColor: 'transparent', border: 'none'}}><img src={whiteStar} alt="white-star" width="35px" height="35px"/></button>}
                             <input type="image" alt="calendar" onClick={openDatePicker} src={calendar} style={{backgroundColor: 'transparent', border: 'none', marginLeft: '10px', width: "55px", height: "45px"}}/>
-                            <DatePicker open={datePickerIsOpen} className="date-picker" onClickOutside={openDatePicker} onChange={date => setDate(date)} />
+                            <DatePicker open={datePickerIsOpen} showTimeSelect selected={date} className="date-picker" onClickOutside={openDatePicker} onChange={date => setDate(date)} />
                             <div style={{marginLeft: '10px'}}>
                                 <button type="button" className="btn btn-primary" onClick={createToDo}>Add</button>
                             </div>

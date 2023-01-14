@@ -10,7 +10,7 @@ import './Todo.css'
 import calendar from './images/calendar.png'
 import whiteStar from './images/whitestar.png'
 import yellowStar from './images/yellowstar.png'
-import DatePicker from "react-datepicker";
+import DatePicker from "react-datepicker"
 
 function Todo(props) {
 
@@ -21,13 +21,14 @@ function Todo(props) {
     let active = todo.importance
     let duplicate = false;
     const formattedDate = format(date)
+    const formattedTime = getTime(date)
 
     let childKey = ""
     const toDoReference = ref(db, `todos/${auth.currentUser.uid}/`)
     onValue(toDoReference, (snapshot) => {
         const snap = snapshot.val()
         snapshot.forEach(childSnapshot => {
-            if ((todo.toDoName == "" || todo.toDoName == snap[childSnapshot.key].toDoName) && (todo.importance == snap[childSnapshot.key].importance) && (todo.Date == snap[childSnapshot.key].Date)) {
+            if ((todo.toDoName == "" || todo.toDoName == snap[childSnapshot.key].toDoName) && (todo.importance == snap[childSnapshot.key].importance) && (todo.Date == snap[childSnapshot.key].Date) && (todo.Time == snap[childSnapshot.key].Time)) {
                 childKey = childSnapshot.key
             }
         })
@@ -55,13 +56,24 @@ function Todo(props) {
 
         return `${month}/${date}/${year}`;
     }
+    function getTime(inputDate) {
+        let hours = inputDate.getHours();
+        let minutes = inputDate.getMinutes();
+        let ampm = hours >= 12 ? 'pm' : 'am';
+
+        hours = hours % 12;
+        hours = hours ? hours : 12;
+        minutes = minutes < 10 ? '0' + minutes : minutes;
+        let strTime = hours + ':' + minutes + ' ' + ampm;
+        return strTime
+    }
 
     const openDatePickerSubmit = () => {
         setDatePickerIsOpen(!datePickerIsOpen)
         onValue(toDoReference, (snapshot) => {
             const todos = snapshot.val()
             for (let id in todos) {
-                if ((todo.toDoName == todos[id].toDoName) && (todo.importance == todos[id].importance) && (formattedDate == todos[id].Date)) {
+                if ((todo.toDoName == todos[id].toDoName) && (todo.importance == todos[id].importance) && (formattedDate == todos[id].Date) && (formattedTime == todos[id].Time)) {
                     duplicate = true;
                 }
             }
@@ -71,7 +83,8 @@ function Todo(props) {
         }
         else {
             update(toDoChildReference, {
-                Date: formattedDate
+                Date: formattedDate,
+                Time: formattedTime
             })
         }
     }
@@ -82,7 +95,7 @@ function Todo(props) {
         onValue(toDoReference, (snapshot) => {
             const todos = snapshot.val()
             for (let id in todos) {
-                if ((todo.toDoName == todos[id].toDoName) && (important == todos[id].importance) && (todo.Date == todos[id].Date)) {
+                if ((todo.toDoName == todos[id].toDoName) && (important == todos[id].importance) && (todo.Date == todos[id].Date) && (todo.Time == todos[id].Time)) {
                     duplicate = true;
                 }
             }
@@ -107,7 +120,7 @@ function Todo(props) {
         onValue(toDoReference, (snapshot) => {
             const todos = snapshot.val()
             for (let id in todos) {
-                if ((newToDoName == todos[id].toDoName) && (todo.importance == todos[id].importance) && (todo.Date == todos[id].Date)) {
+                if ((newToDoName == todos[id].toDoName) && (todo.importance == todos[id].importance) && (todo.Date == todos[id].Date) && (todo.Time == todos[id].Time)) {
                     duplicate = true;
                 }
             }
@@ -142,12 +155,12 @@ function Todo(props) {
                 <div style={{display: 'flex', flexDirection: 'row', alignItems: 'center'}}>
                     <button style={{backgroundColor: 'transparent', border: 'none'}} onClick={completeTodo}><img src={checkmark} alt="complete" width="25px" height="25px"/></button>
                     <input type="text" value={todo.toDoName === "" ? newToDoName : todo.toDoName} className={todo.completed ? "complete" : "list-item"} onChange={handleChange} />
-                    <div style={{color: 'white'}}>{todo.Date}</div>
+                    <div style={{color: 'white', textAlign: 'center'}}>{todo.Date} {todo.Time}</div>
                     <button style={{backgroundColor: 'transparent', border: 'none', paddingBottom: '10px', marginLeft: '10px'}} onClick={editTodo}><img src={edit} alt="complete" width="25px" height="25px"/></button>
                     <button style={{backgroundColor: 'transparent', border: 'none', paddingBottom: '10px'}} onClick={deleteTodo}><img src={deleteImage} alt="complete" width="25px" height="25px"/></button>
                     {active ?  <button onClick={onSetActive} style={{backgroundColor: 'transparent', border: 'none', paddingBottom: '10px'}}><img src={yellowStar} alt="yellow-star" width="30px" height="30px"/></button> :  <button onClick={onSetActive} style={{backgroundColor: 'transparent', border: 'none', paddingBottom: '10px'}}><img src={whiteStar} alt="white-star" width="30px" height="30px"/></button>}
                     <input type="image" alt="calendar" onClick={openDatePicker} src={calendar} style={{backgroundColor: 'transparent', border: 'none', width: "45px", height: "45px", paddingBottom: '7px'}}/>
-                    <DatePicker open={datePickerIsOpen} className="date-picker" onClickOutside={openDatePickerSubmit} onChange={date => setDate(date)} />
+                    <DatePicker open={datePickerIsOpen} showTimeSelect selected={date} className="date-picker" onClickOutside={openDatePickerSubmit} onChange={date => setDate(date)} />
                 </div>
             </Card.Body>
         </Card>
