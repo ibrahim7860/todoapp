@@ -43,7 +43,7 @@ export const signInWithFacebook = () => {
 const providerThree = new GithubAuthProvider()
 export const signInWithGithub = () => {
     signInWithPopup(auth, providerThree).then((result) => {
-        const githubCredential = providerThree.credentialFromResult(result);
+        const githubCredential = GithubAuthProvider.credentialFromResult(result);
         const githubToken = githubCredential.accessToken;
         const githubUser = result.user;
     }).catch((error) => alert(error.message))

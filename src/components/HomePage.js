@@ -3,7 +3,7 @@ import {auth, db} from "../firebase-config";
 import {signOut} from 'firebase/auth'
 import {useNavigate} from "react-router-dom";
 import 'bootstrap/dist/css/bootstrap.css';
-import {Card, Nav, Navbar, Offcanvas} from "react-bootstrap";
+import {Card, Nav, Navbar, Offcanvas, ProgressBar} from "react-bootstrap";
 import DatePicker from "react-datepicker";
 import {onValue, push, ref} from 'firebase/database'
 import 'react-datepicker/dist/react-datepicker.css'
@@ -26,6 +26,7 @@ function HomePage() {
     let [allTasks, setAllTasks] = useState(false)
     const [toDoName, setToDoName] = useState("")
     const [toDoList, setToDoList] = useState([])
+    const completionPercent = getProgress()
     const [date, setDate] = useState(new Date())
     const [datePickerIsOpen, setDatePickerIsOpen] = useState(false)
     const [active, setActive] = useState(false)
@@ -126,6 +127,29 @@ function HomePage() {
         })
     }, [])
 
+    function getProgress() {
+        let numCompleted = 0
+        toDoList.map((todo) => {
+            if (todo.completed == true) {
+                numCompleted++
+            }
+        })
+        return (numCompleted / toDoList.length) * 100
+    }
+
+    function getVariant(completionPercent) {
+        completionPercent /= 100
+        if (completionPercent < 0.25) {
+            return 'danger'
+        }
+        else if (completionPercent < 0.5) {
+            return 'primary'
+        }
+        else if (completionPercent > 0.5) {
+            return 'success'
+        }
+    }
+
     useEffect(() => {
         const fetchQuote = async () => {
             await fetch("https://type.fit/api/quotes")
@@ -182,7 +206,7 @@ function HomePage() {
                 </Offcanvas>
                 <Navbar.Brand className="my-tasks">MY TASKS</Navbar.Brand>
                 <Nav className="ms-auto">
-                    <Nav.Link onClick={signUserOut} style={{marginRight: '10px', fontSize: '20px', borderStyle: 'solid', borderWidth: '4px', backgroundColor: 'red', borderRadius: '15px', fontWeight: 'bold'}}>SIGN OUT</Nav.Link>
+                    <Nav.Link onClick={signUserOut} style={{marginRight: '10px', fontSize: '20px', borderStyle: 'solid', borderWidth: '3px', backgroundColor: 'red', borderRadius: '15px', fontWeight: 'bold'}}>SIGN OUT</Nav.Link>
                 </Nav>
             </Navbar>
             <div className="content-body">
@@ -197,6 +221,7 @@ function HomePage() {
                         </div>
                     )
                 })}
+                <ProgressBar style={{backgroundColor: 'lightgray', margin: '0 20% 0 20%', height: '30px'}} className="rounded-pill" animated now={completionPercent} label={`${completionPercent}%`} variant={getVariant(completionPercent)} />
                 <Card className="mx-auto" style={{width: '50%', marginTop: '35px', borderColor: 'red', borderWidth: '5px'}}>
                     <Card.Body style={{backgroundColor: 'black'}}>
                         <div style={{display: 'flex', flexDirection: 'row', alignItems: 'center'}}>
