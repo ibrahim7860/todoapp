@@ -4,13 +4,14 @@ import 'bootstrap/dist/css/bootstrap.css';
 import {Button, Col, Container, Form, Row} from 'react-bootstrap'
 import google from './images/google.png'
 import facebook from './images/facebook.png'
-import microsoft from './images/microsoft.png'
+import github from './images/github.png'
+
 import {
     auth,
     db,
     signInWithFacebook,
     signInWithGoogle,
-    signInWithMicrosoft
+    signInWithGithub
 } from "../firebase-config";
 import {Link, useNavigate} from "react-router-dom";
 import {useEffect} from "react";
@@ -64,9 +65,9 @@ function SignIn() {
         }
     }
 
-    const handleMicrosoftSignIn = async () => {
+    const handleGithubSignIn = async () => {
         try {
-            await signInWithMicrosoft()
+            await signInWithGithub()
         } catch (error) {
             alert(error.message)
         }
@@ -121,7 +122,7 @@ function SignIn() {
                     <Row style={{marginLeft: '51%', marginTop: "10px", marginBottom: "10px", fontSize: "12pt"}}>
                         <Link to="/forgotpassword" replace>Forgot Password?</Link>
                     </Row>
-                    <Row style={{marginRight: '6.5%'}}>
+                    <Row style={{marginRight: '8%'}}>
                         <Col>
                             <button  style={{backgroundColor: 'transparent', border: 'none'}}>
                                 <img src={google} alt="google logo" width="50px" height="50px" onClick={handleGoogleSignIn} />
@@ -134,7 +135,7 @@ function SignIn() {
                         </Col>
                         <Col>
                             <button  style={{backgroundColor: 'transparent', border: 'none'}}>
-                                <img src={microsoft} alt="microsoft logo" width="55px" height="55px" onClick={handleMicrosoftSignIn}/>
+                                <img src={github} alt="github logo" width="55px" height="55px" onClick={handleGithubSignIn}/>
                             </button>
                         </Col>
                     </Row>

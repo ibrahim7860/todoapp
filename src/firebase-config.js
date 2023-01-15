@@ -1,5 +1,5 @@
 import { initializeApp } from 'firebase/app'
-import { getAuth, GoogleAuthProvider, signInWithPopup, FacebookAuthProvider, OAuthProvider } from 'firebase/auth'
+import { getAuth, GoogleAuthProvider, signInWithPopup, FacebookAuthProvider, GithubAuthProvider } from 'firebase/auth'
 import { getDatabase, set } from "firebase/database";
 
 export const firebaseConfig = {
@@ -40,11 +40,11 @@ export const signInWithFacebook = () => {
     }).catch((error) => alert(error.message))
 }
 
-const providerThree = new OAuthProvider('microsoft.com')
-export const signInWithMicrosoft = () => {
+const providerThree = new GithubAuthProvider()
+export const signInWithGithub = () => {
     signInWithPopup(auth, providerThree).then((result) => {
-        const microsoftCredential = providerThree.credentialFromResult(result);
-        const microsoftToken = microsoftCredential.accessToken;
-        const microsoftUser = result.user;
+        const githubCredential = providerThree.credentialFromResult(result);
+        const githubToken = githubCredential.accessToken;
+        const githubUser = result.user;
     }).catch((error) => alert(error.message))
 }

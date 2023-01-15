@@ -4,14 +4,14 @@ import 'bootstrap/dist/css/bootstrap.css';
 import {Button, Col, Container, Form, Row} from 'react-bootstrap'
 import google from './images/google.png'
 import facebook from './images/facebook.png'
-import microsoft from './images/microsoft.png'
+import github from './images/github.png'
 import {
     auth,
     db,
     pushEmailToDatabase,
     signInWithFacebook,
     signInWithGoogle,
-    signInWithMicrosoft
+    signInWithGithub
 } from "../firebase-config";
 import {Link, useNavigate} from "react-router-dom";
 import {useEffect} from "react";
@@ -65,9 +65,9 @@ function SignUp() {
         }
     }
 
-    const handleMicrosoftSignUp = async () => {
+    const handleGithubSignUp = async () => {
         try {
-            await signInWithMicrosoft()
+            await signInWithGithub()
         } catch (error) {
             alert(error.message)
         }
@@ -106,7 +106,7 @@ function SignUp() {
                         </Form.Group>
                         <Button onClick={register} variant="primary" style={{marginTop: "40px", marginBottom: "44px", width: "70%"}}>SIGN UP</Button>
                     </Form>
-                    <Row style={{marginRight: '6.5%'}}>
+                    <Row style={{marginRight: '8%'}}>
                         <Col>
                             <button  style={{backgroundColor: 'transparent', border: 'none'}}>
                                 <img src={google} alt="google logo" width="50px" height="50px" onClick={handleGoogleSignUp} />
@@ -119,7 +119,7 @@ function SignUp() {
                         </Col>
                         <Col>
                             <button  style={{backgroundColor: 'transparent', border: 'none'}}>
-                                <img src={microsoft} alt="microsoft logo" width="55px" height="55px" onClick={handleMicrosoftSignUp}/>
+                                <img src={github} alt="github logo" width="55px" height="55px" onClick={handleGithubSignUp}/>
                             </button>
                         </Col>
                     </Row>
