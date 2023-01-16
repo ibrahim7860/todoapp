@@ -21,9 +21,9 @@ function Todo(props) {
     let duplicate = false;
     const formattedDate = format(date)
     const formattedTime = getTime(date)
-
     let childKey = ""
     const toDoReference = ref(db, `todos/${auth.currentUser.uid}/`)
+
     onValue(toDoReference, (snapshot) => {
         const snap = snapshot.val()
         snapshot.forEach(childSnapshot => {
@@ -32,6 +32,7 @@ function Todo(props) {
             }
         })
     })
+
     const toDoChildReference = ref(db, `/todos/${auth.currentUser.uid}/${childKey}/`)
 
     const openDatePicker = () => {
@@ -55,6 +56,7 @@ function Todo(props) {
 
         return `${month}/${date}/${year}`;
     }
+
     function getTime(inputDate) {
         let hours = inputDate.getHours();
         let minutes = inputDate.getMinutes();

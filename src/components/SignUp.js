@@ -18,11 +18,10 @@ import {useEffect} from "react";
 import {createUserWithEmailAndPassword, onAuthStateChanged} from 'firebase/auth'
 import {ref} from "firebase/database";
 
-
 function SignUp() {
+
     const [registerEmail, setRegisterEmail] = useState("")
     const [registerPassword, setRegisterPassword] = useState("")
-
     const navigate = useNavigate()
 
     const register = async (e) => {

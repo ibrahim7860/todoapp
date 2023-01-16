@@ -6,8 +6,8 @@ import 'firebase/compat/auth'
 import {firebaseConfig} from "../firebase-config";
 
 function ForgotPassword() {
-    const [forgotPasswordEmail, setForgotPasswordEmail] = useState("")
 
+    const [forgotPasswordEmail, setForgotPasswordEmail] = useState("")
     const navigate = useNavigate()
 
     const handlePasswordReset = async (e) => {

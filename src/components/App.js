@@ -9,7 +9,9 @@ import {useEffect} from "react";
 let color = '#' +  Math.random().toString(16).substr(-6);
 
 function App() {
+
     useEffect(() => { document.body.style.backgroundColor = color }, [])
+
   return (
       <BrowserRouter>
           <Routes>

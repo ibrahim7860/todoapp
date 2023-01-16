@@ -18,23 +18,23 @@ function HomePage() {
 
     const toDoReference = ref(db, 'todos/' + auth.currentUser.uid)
     let canCreateToDo = true, nullQuote = false
-    const today = format(new Date())
-    const [show, setShow] = useState(false)
+    const todayDate = format(new Date())
+    const [showSidebar, setShowSidebar] = useState(false)
     let [isImportant, setIsImportant] = useState(false)
     let [isCompleted, setIsCompleted] = useState(false)
     let [myDay, setMyDay] = useState(false)
     let [allTasks, setAllTasks] = useState(false)
     const [toDoName, setToDoName] = useState("")
     const [toDoList, setToDoList] = useState([])
-    const completionPercent = getProgress()
+    const myDayCompletionPercent = getProgress()
     const [date, setDate] = useState(new Date())
     const [datePickerIsOpen, setDatePickerIsOpen] = useState(false)
-    const [active, setActive] = useState(false)
+    const [toggleStars, setToggleStars] = useState(false)
     const [important, setImportant] = useState(false)
     const [quotes, setQuotes] = useState([])
     const navigate = useNavigate()
-    const [start, setStart] = useState(0)
-    const [end, setEnd] = useState(0)
+    const [startingIndex, setStartingIndex] = useState(0)
+    const [endIndex, setEndIndex] = useState(0)
 
     const signUserOut = () => {
         signOut(auth).then(() => {
@@ -44,16 +44,21 @@ function HomePage() {
         })
     }
 
-    const handleClose = () => {setShow(false)}
-    const handleShow = () => {setShow(true)}
+    const handleClose = () => {setShowSidebar(false)}
+
+    const handleShow = () => {setShowSidebar(true)}
+
     const openDatePicker = () => {setDatePickerIsOpen(!datePickerIsOpen)}
+
     const onSetActive = () => {
-        setActive(!active)
-        setImportant(!active)
+        setToggleStars(!toggleStars)
+        setImportant(!toggleStars)
     }
+
     const handleToDo = (e) => {
         setToDoName(e.target.value)
     }
+
     function format(inputDate) {
         let date, month, year;
 
@@ -71,6 +76,7 @@ function HomePage() {
 
         return `${month}/${date}/${year}`;
     }
+
     function getTime(inputDate) {
         let hours = inputDate.getHours();
         let minutes = inputDate.getMinutes();
@@ -81,6 +87,7 @@ function HomePage() {
         minutes = minutes < 10 ? '0' + minutes : minutes;
         return hours + ':' + minutes + ' ' + ampm
     }
+
     const createToDo = (e) => {
         e.preventDefault()
         if (toDoName == "") {
@@ -128,13 +135,24 @@ function HomePage() {
     }, [])
 
     function getProgress() {
-        let numCompleted = 0
+        let numCompleted = 0, numToday = 0
         toDoList.map((todo) => {
-            if (todo.completed == true) {
+            if (todo.Date == todayDate) {
+                numToday++
+            }
+            if (todo.completed == true && todo.Date == todayDate) {
                 numCompleted++
             }
         })
-        return (numCompleted / toDoList.length) * 100
+        if (numCompleted == 0) {
+            return 0
+        }
+        else if (Number.isInteger((numCompleted / numToday) * 100)) {
+            return (numCompleted / numToday) * 100
+        }
+        else {
+            return ((numCompleted / numToday) * 100).toFixed(2)
+        }
     }
 
     function getVariant(completionPercent) {
@@ -161,9 +179,9 @@ function HomePage() {
 
     useEffect(() => {
         const startingNumber = Math.floor(Math.random() * 1000)
-        setStart(startingNumber)
+        setStartingIndex(startingNumber)
         const endingNumber = startingNumber + 1
-        setEnd(endingNumber)
+        setEndIndex(endingNumber)
     }, [])
 
     return (
@@ -172,11 +190,11 @@ function HomePage() {
                 <button style={{backgroundColor: 'transparent', border: 'none', marginLeft: '10px'}} data-bs-toggle="offcanvas" data-bs-target="#sidebar">
                     <img src={menu} alt="sidebar" width="45px" height="45px" onClick={handleShow}/>
                 </button>
-                <Offcanvas show={show} onHide={handleClose} style={{transition: '0.5s', backgroundColor: 'black'}}>
+                <Offcanvas show={showSidebar} onHide={handleClose} style={{transition: '0.5s', backgroundColor: 'black'}}>
                     <button onClick={handleClose} style={{position: 'absolute', top: 0, right: '0px', marginLeft: '50px', fontSize: '30px', backgroundColor: 'transparent', color: '#818181', border: 'none'}}>X</button>
                     <div style={{color: '#818181', fontSize: '20px', textAlign: 'center', marginTop: '5%'}}>SIGNED IN AS:</div>
                     <div style={{color: '#818181', fontSize: '25px', textAlign: 'center', fontWeight: 'bold', marginTop: '2%'}}>{auth.currentUser.email}</div>
-                    <div style={{color: '#818181', fontSize: '25px', textAlign: 'center', marginTop: '2%'}}>{today}</div>
+                    <div style={{color: '#818181', fontSize: '25px', textAlign: 'center', marginTop: '2%'}}>{todayDate}</div>
                     <Offcanvas.Body style={{paddingTop: '20%', paddingBottom: '50%'}}>
                         <button style={{fontSize: '25px', display: 'block', transition: '0.3s', color: '#818181', textDecoration: 'none', margin: 'auto', backgroundColor: 'transparent', border: 'none', marginBottom: '17%'}} onClick={() => {
                             setMyDay(true)
@@ -210,7 +228,7 @@ function HomePage() {
                 </Nav>
             </Navbar>
             <div className="content-body">
-                {quotes.slice(start, end).map((quote) => {
+                {quotes.slice(startingIndex, endIndex).map((quote) => {
                     if (quote.author == null) {
                         nullQuote = true;
                     }
@@ -221,12 +239,12 @@ function HomePage() {
                         </div>
                     )
                 })}
-                <ProgressBar style={{backgroundColor: 'lightgray', margin: '0 20% 0 20%', height: '30px'}} className="rounded-pill" animated now={completionPercent} label={`${completionPercent}%`} variant={getVariant(completionPercent)} />
-                <Card className="mx-auto" style={{width: '50%', marginTop: '35px', borderColor: 'red', borderWidth: '5px'}}>
+                {myDay ? <ProgressBar style={{backgroundColor: 'lightgray', margin: '0 20% 0 20%', height: '30px'}} className="rounded-pill" animated now={myDayCompletionPercent} label={`${myDayCompletionPercent}%`} variant={getVariant(myDayCompletionPercent)} /> : ""}
+                <Card className="mx-auto" style={{width: '50%', marginTop: '35px', marginBottom: '35px', borderColor: 'red', borderWidth: '5px'}}>
                     <Card.Body style={{backgroundColor: 'black'}}>
                         <div style={{display: 'flex', flexDirection: 'row', alignItems: 'center'}}>
                             <input type="text" placeholder="Add new task" value={toDoName} onChange={handleToDo} required style={{borderColor: 'transparent', width: '100%', outline: 'none', backgroundColor: 'transparent', color: 'white'}} />
-                            {active ?  <button onClick={onSetActive} style={{backgroundColor: 'transparent', border: 'none'}}><img src={yellowStar} alt="yellow-star" width="35px" height="35px"/></button> :  <button onClick={onSetActive} style={{backgroundColor: 'transparent', border: 'none'}}><img src={whiteStar} alt="white-star" width="35px" height="35px"/></button>}
+                            {toggleStars ?  <button onClick={onSetActive} style={{backgroundColor: 'transparent', border: 'none'}}><img src={yellowStar} alt="yellow-star" width="35px" height="35px"/></button> :  <button onClick={onSetActive} style={{backgroundColor: 'transparent', border: 'none'}}><img src={whiteStar} alt="white-star" width="35px" height="35px"/></button>}
                             <input type="image" alt="calendar" onClick={openDatePicker} src={calendar} style={{backgroundColor: 'transparent', border: 'none', marginLeft: '4px', width: "55px", height: "45px"}}/>
                             <DatePicker open={datePickerIsOpen} showTimeSelect selected={date} className="date-picker" onClickOutside={openDatePicker} onChange={date => setDate(date)} />
                             <div style={{marginLeft: '10px'}}>
@@ -235,10 +253,9 @@ function HomePage() {
                         </div>
                     </Card.Body>
                 </Card>
-                <hr style={{width: '50%', margin: 'auto', marginTop: '30px', marginBottom: '30px', height: '10px', backgroundColor: '#b7d0e2'}}/>
                 <div>
                     {myDay ? toDoList.filter((todo) => {
-                        if (todo.Date == today) {
+                        if (todo.Date == todayDate) {
                             return todo
                         }
                     }).map((todo) => <Todo todo={todo} />) : isImportant ? toDoList.filter((todo) => {

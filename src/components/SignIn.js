@@ -5,7 +5,6 @@ import {Button, Col, Container, Form, Row} from 'react-bootstrap'
 import google from './images/google.png'
 import facebook from './images/facebook.png'
 import github from './images/github.png'
-
 import {
     auth,
     db,
@@ -19,10 +18,9 @@ import {signInWithEmailAndPassword, onAuthStateChanged, signOut} from "firebase/
 import {onValue, ref} from "firebase/database";
 
 function SignIn() {
+
     const [loginEmail, setLoginEmail] = useState("")
     const [loginPassword, setLoginPassword] = useState("")
-    const [emailList, setEmailList] = useState([])
-
     const navigate = useNavigate()
 
     const login = async (e) => {
@@ -72,6 +70,7 @@ function SignIn() {
             alert(error.message)
         }
     }
+
     useEffect(() => {
         const unsubscribe = onAuthStateChanged(auth, (user) => {
             if (user != null) {
@@ -82,7 +81,6 @@ function SignIn() {
                         let value = childSnapshot.val()
                         emailList.push(value.emailAddress)
                     })
-                    setEmailList(emailList)
                      if (!emailList.some(email => email === user.email)) {
                            signOut(auth).then(() => {
                                navigate('/')
