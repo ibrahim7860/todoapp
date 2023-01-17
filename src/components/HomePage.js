@@ -113,7 +113,8 @@ function HomePage() {
                     completed: false,
                     importance: important,
                     Date: formattedDate,
-                    Time: formattedTime
+                    Time: formattedTime,
+                    fullDate: date.toString()
                 })
             }
             setToDoName("")
@@ -128,7 +129,12 @@ function HomePage() {
                 toDoList.push({toDoName, ...todos[toDoName]})
             }
             toDoList.sort(function(a,b) {
-                return new Date(a.Date) - new Date(b.Date)
+                if (a.Date == b.Date) {
+                    return new Date(a.fullDate) - new Date(b.fullDate)
+                }
+                else {
+                    return new Date(a.Date) - new Date(b.Date)
+                }
             })
             setToDoList(toDoList)
         })

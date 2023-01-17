@@ -84,7 +84,8 @@ function Todo(props) {
         else {
             update(toDoChildReference, {
                 Date: formattedDate,
-                Time: formattedTime
+                Time: formattedTime,
+                fullDate: date.toString()
             })
         }
     }
