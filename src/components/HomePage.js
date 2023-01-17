@@ -246,8 +246,8 @@ function HomePage() {
                     )
                 })}
                 {myDay ? <ProgressBar style={{backgroundColor: 'lightgray', margin: '0 20% 0 20%', height: '30px'}} className="rounded-pill" animated now={myDayCompletionPercent} label={`${myDayCompletionPercent}%`} variant={getVariant(myDayCompletionPercent)} /> : ""}
-                <Card className="mx-auto" style={{width: '50%', marginTop: '35px', marginBottom: '35px', borderColor: 'red', borderWidth: '5px'}}>
-                    <Card.Body style={{backgroundColor: 'black'}}>
+                <Card className="mx-auto" style={{width: '50%', marginTop: '35px', marginBottom: '35px'}}>
+                    <Card.Body style={{backgroundColor: 'black', borderRadius: '5px'}}>
                         <div style={{display: 'flex', flexDirection: 'row', alignItems: 'center'}}>
                             <input type="text" placeholder="Add new task" value={toDoName} onChange={handleToDo} required style={{borderColor: 'transparent', width: '100%', outline: 'none', backgroundColor: 'transparent', color: 'white'}} />
                             {toggleStars ?  <button onClick={onSetActive} style={{backgroundColor: 'transparent', border: 'none'}}><img src={yellowStar} alt="yellow-star" width="35px" height="35px"/></button> :  <button onClick={onSetActive} style={{backgroundColor: 'transparent', border: 'none'}}><img src={whiteStar} alt="white-star" width="35px" height="35px"/></button>}

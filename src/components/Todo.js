@@ -151,7 +151,7 @@ function Todo(props) {
     }
 
     return (
-        <Card className="mx-auto" style={{width: '50%', marginTop: '15px', marginBottom: '15px', backgroundColor: 'black', borderStyle: 'solid', borderColor: 'red', borderWidth: '5px'}}>
+        <Card className="mx-auto" style={{width: '50%', marginTop: '15px', marginBottom: '15px', backgroundColor: 'black'}}>
             <Card.Body>
                 <div style={{display: 'flex', flexDirection: 'row', alignItems: 'center'}}>
                     <button style={{backgroundColor: 'transparent', border: 'none'}} onClick={completeTodo}><img src={checkmark} alt="complete" width="25px" height="25px"/></button>

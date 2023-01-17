@@ -1,5 +1,16 @@
 .content-box {
+    position: absolute;
+    width: 98%;
+    height: 98%;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    margin: auto;
+    border: solid black 4px;
+    border-radius: 25px;
     background-color: white;
+    overflow: auto;
 }
 
 .content-body {
